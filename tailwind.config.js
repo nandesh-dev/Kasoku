@@ -5,7 +5,15 @@ export default {
     "./src/**/*.js"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        "gray-100": '#13151B',
+        "gray-200": '#171821',
+        "gray-300": '#21222D',
+        "gray-500": '#2B2C39',
+        "white": '#FFFFFF'
+      }
+    },
   },
   plugins: [],
 }
