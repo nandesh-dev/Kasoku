@@ -4,7 +4,9 @@ import { Preview } from './preview'
 
 const shotcutBar = new ShotcutBar("home")
 
-shotcutBar.attachKeybind("home", "New Element", "n", ()=>{
+shotcutBar.attachKeybind("home", "Temp", "t")
+
+shotcutBar.attachKeybind("selected", "New Element", " ", ()=>{
   shotcutBar.setState("new")
   shotcutBar.setSelectedKey("d")
 })
@@ -42,8 +44,16 @@ const elementTypes = [
   },
 ]
 
-elementTypes.forEach(({ name, keybind })=>{
-  shotcutBar.attachKeybind("new", name, keybind)
+elementTypes.forEach(({ name, keybind, type })=>{
+  shotcutBar.attachKeybind("new", name, keybind, ()=>{
+    preview.transverse((block, parent)=>{
+      if ( !block.selected ) return
+      block.children.push({ type , children: []})
+      block.selected = false
+      preview.render()
+      shotcutBar.setState("home")
+    }) 
+  })
 })
 
 const preview = new Preview()
@@ -62,13 +72,16 @@ function renderCanvas(){
 
   preview.transverse((block)=>{
     const { x, y, width, height } = block.element.getBoundingClientRect()
-    ctx.strokeStyle = "cyan"
+    ctx.strokeStyle = "white"
     ctx.strokeRect(x - 4, y - 4, width, height)
-
+    
     if ( block.selected ) {
-      ctx.fillStyle = "rgba(0, 200, 150, 0.1)"
+      ctx.fillStyle = "rgba(255, 255, 255, 0.2)"
       ctx.fillRect(x - 4, y - 4, width, height)
-    }
+    } else if ( block.near ) {
+      ctx.fillStyle = "rgba(255, 255, 255, 0.1)"
+      ctx.fillRect(x - 4, y - 4, width, height)
+    } 
   })
 
   requestAnimationFrame(renderCanvas)
@@ -77,8 +90,9 @@ function renderCanvas(){
 canvas.addEventListener("mousemove", ({clientX, clientY})=>{
   const mouseX = clientX - containerX
   const mouseY = clientY - containerY
-  
+
   preview.transverse((block, parent)=>{
+    if ( !parent )  return
     const { x, y, width, height } = block.element.getBoundingClientRect()
     if (
       x < mouseX && 
@@ -86,27 +100,54 @@ canvas.addEventListener("mousemove", ({clientX, clientY})=>{
       y < mouseY && 
       y + height > mouseY
     ){
-      if ( shotcutBar.state == "new" ) block.selected = true
-      else block.selected = false
-      parent.selected = false
+      block.near = true
+      parent.near = false
     } else {
-      block.selected = false  
+      block.near = false  
     }
   })
 
 })
 
 canvas.addEventListener("click", ({clientX, clientY})=>{
-  if ( shotcutBar.state !== "new" ) return
-  
-  preview.transverse((block, parent)=>{
-    if ( !block.selected ) return
-    const { type } = elementTypes.find(({keybind}) => keybind == shotcutBar.selectedKey) 
-    block.children.push({ type , children: []})
-    preview.render()
-    shotcutBar.setState("home")
-  })
+  shotcutBar.setState("selected")
 
+  preview.transverse((block, parent)=>{
+    if ( block.selected ) {
+      block.selected = false
+      block.near = true
+    } else {
+      block.selected = block.near
+    }
+  })
+})
+
+canvas.addEventListener("wheel", ({ deltaY })=>{
+  const up = deltaY > 0
+  
+  if ( up ) {
+    preview.transverse((block, parent)=>{
+      if ( !parent ) return
+      if ( block.selected ) {
+        block.selected = false
+        block.scrolled = true
+        parent.selected = true
+      }
+    })
+
+    preview.render()
+  } else {
+    preview.transverse((block, parent)=>{
+      if ( !parent ) return
+      if ( !parent.selected || !block.scrolled )  return
+      parent.selected = false
+      parent.scrolled = false
+      block.selected = true
+
+      return true
+    })
+  }
+  console.log(preview._tree, null, 3)
 })
 
 renderCanvas()

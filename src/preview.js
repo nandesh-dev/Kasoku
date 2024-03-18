@@ -4,21 +4,29 @@ export class Preview{
     
     this._tree = {
       element: this._container,
+      scrolled: false,
       children: [
         {
+          scrolled: false,
           children: []
         },
         {
+          scrolled: false,
           children: [
             {
+              scrolled: false,
+              children: []
+            },
+            {
+              scrolled: false,
               children: []
             }
           ]
         }
       ]
     }
-  
-  this.render()
+
+    this.render()
   }
 
   render(){
@@ -33,7 +41,7 @@ export class Preview{
   }
 
   transverse(func, block = this._tree, parent){
-    if ( parent ) func(block, parent)
+    if ( func(block, parent) ) return // if function returns true, stop the recussion
 
     block.children.forEach((child)=>{
       this.transverse(func, child, block)

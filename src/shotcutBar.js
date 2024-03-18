@@ -33,7 +33,7 @@ export class ShotcutBar{
       const { name } = this._keybinds[this._state][key]
 
       const button = key == this._selectedKey ? Templates.SelectedShotcutButton() : Templates.ShotcutButton()
-      button.querySelector(".shotcut-text").innerText = `[ ${key} ] ${name}`
+      button.querySelector(".shotcut-text").innerText = `[ ${key == " " ? "Space" : key} ] ${name}`
         
       this._container.appendChild(button)
     })
