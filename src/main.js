@@ -2,34 +2,49 @@ import { ShotcutBar } from './shotcutBar'
 import { Preview } from './preview'
 
 
-const shotcutBar = new ShotcutBar()
+const shotcutBar = new ShotcutBar("home")
 
 shotcutBar.attachKeybind("home", "New Element", "n", ()=>{
   shotcutBar.setState("new")
+  shotcutBar.setSelectedKey("d")
 })
 
-let newElementType = "div"
-shotcutBar.attachKeybind("new", "Div", "d", ()=>{
-  newElementType = "div"
-})
-shotcutBar.attachKeybind("new", "P", "r", ()=>{
-  newElementType = "p"
-})
-shotcutBar.attachKeybind("new", "Button", "b", ()=>{
-  newElementType = "button"
-})
-shotcutBar.attachKeybind("new", "A", "a", ()=>{
-  newElementType = "a"
-})
-shotcutBar.attachKeybind("new", "Section", "s", ()=>{
-  newElementType = "section"
-})
-shotcutBar.attachKeybind("new", "Nav", "n", ()=>{
-  newElementType = "nav"
-})
+const elementTypes = [
+  {
+    name: "Div",
+    keybind: "d",
+    type: "div"
+  },
+  {
+    name: "Para",
+    keybind: "r",
+    type: "p"
+  },
+  {
+    name: "Button",
+    keybind: "b",
+    type: "button"
+  },
+  {
+    name: "Anchor",
+    keybind: "a",
+    type: "a"
+  },
+  {
+    name: "Section",
+    keybind: "s",
+    type: "section"
+  },
+  {
+    name: "Nav",
+    keybind: "n",
+    type: "nav"
+  },
+]
 
-shotcutBar.setState("home")
-
+elementTypes.forEach(({ name, keybind })=>{
+  shotcutBar.attachKeybind("new", name, keybind)
+})
 
 const preview = new Preview()
 
@@ -86,7 +101,8 @@ canvas.addEventListener("click", ({clientX, clientY})=>{
   
   preview.transverse((block, parent)=>{
     if ( !block.selected ) return
-    block.children.push({ type: newElementType, children: []})
+    const { type } = elementTypes.find(({keybind}) => keybind == shotcutBar.selectedKey) 
+    block.children.push({ type , children: []})
     preview.render()
     shotcutBar.setState("home")
   })

@@ -1,16 +1,27 @@
 import * as Templates from './templates'
 
 export class ShotcutBar{
-  constructor(state){
+  constructor(homeState){
     this._container = document.getElementById("shotcut-button-container") 
-    this._state = state
+    this._state = homeState
+    this._homeState = homeState
+    this._selectedKey = null
     this._keybinds = {}
-
+    
     this._addEventListener()
   }
 
   get state(){
     return this._state
+  }
+
+  get selectedKey(){
+    return this._selectedKey
+  }
+
+  setSelectedKey(key){
+    this._selectedKey = key
+    this._update()
   }
 
   _update(){
@@ -21,11 +32,19 @@ export class ShotcutBar{
     Object.keys(this._keybinds[this._state]).forEach((key)=>{
       const { name } = this._keybinds[this._state][key]
 
-      const button = Templates.ShotcutButton()
+      const button = key == this._selectedKey ? Templates.SelectedShotcutButton() : Templates.ShotcutButton()
       button.querySelector(".shotcut-text").innerText = `[ ${key} ] ${name}`
         
       this._container.appendChild(button)
     })
+
+    if ( this._state == this._homeState ) return
+
+    const button = Templates.ShotcutButton()
+    button.querySelector(".shotcut-text").innerText = "Esc"
+      
+    this._container.appendChild(button)
+
   }
 
   _clear(){
@@ -38,11 +57,20 @@ export class ShotcutBar{
     if(!this._keybinds[this._state]) return
     if(!this._keybinds[this._state][key]) return
     
-    this._keybinds[this._state][key].listener()
+    this._selectedKey = key
+    this._update()
+    
+    const listener = this._keybinds[this._state][key].listener
+    if ( listener ) listener()
   }
 
   _addEventListener(){
-    window.addEventListener("keypress", ({key})=>{
+    window.addEventListener("keydown", ({key})=>{
+      if ( key == "Escape" )  {
+        this.setState(this._homeState)
+        return
+      }
+
       this._onKeyPress(key)
     })
   }
@@ -54,6 +82,8 @@ export class ShotcutBar{
   }
 
   setState(state){
+    if ( state == this._state ) return
+    this._selectedKey = null
     this._state = state
     this._update()
   }
