@@ -9,9 +9,18 @@
       @tailwind components;
       @tailwind utilities;
     </style>
-    <title>Vite App</title>
+    <title>Kasoku</title>
   </head>
-  <body>
+  <body class="h-screen w-screen bg-gray-200 grid grid-rows-[1fr_auto]">
+    <div>
+    </div>
+    <section id="shotcut-button-container" class="flex flex-row flex-wrap-reverse gap-1 w-full p-1">
+      <template id="shotcut-button-template">
+        <div class="flex-1 min-w-fit rounded py-1 px-2 bg-gray-300">
+          <p class="shotcut-text text-gray-800"></p>
+        </div>
+      </template>
+    </section> 
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
