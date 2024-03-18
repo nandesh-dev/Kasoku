@@ -11,16 +11,21 @@
     </style>
     <title>Kasoku</title>
   </head>
-  <body class="h-screen w-screen bg-gray-200 grid grid-rows-[1fr_auto]">
-    <div>
-    </div>
-    <section id="shotcut-button-container" class="flex flex-row flex-wrap-reverse gap-1 w-full p-1">
+  <body class="h-screen w-screen bg-gray-200 grid grid-rows-[1fr_auto] gap-1 overflow-hidden">
+    <section class="grid grid-cols-2 gap-1 p-1 pb-0">
+      <section id="preview-container" class="flex h-full rounded bg-white">
+      </section>
+      <section id="editor-container" class="h-full rounded bg-gray-300">
+        <canvas id="editor-canvas" class="h-full w-full"></canvas>
+      </section>
+    </section>
+    <section id="shotcut-button-container" class="flex flex-row flex-wrap-reverse gap-1 w-full p-1 pt-0">
       <template id="shotcut-button-template">
         <div class="flex-1 min-w-fit rounded py-1 px-2 bg-gray-300">
           <p class="shotcut-text text-gray-800"></p>
         </div>
       </template>
     </section> 
-    <script type="module" src="/src/main.js"></script>
+    <script defer type="module" src="/src/main.js"></script>
   </body>
 </html>

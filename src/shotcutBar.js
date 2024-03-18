@@ -9,6 +9,10 @@ export class ShotcutBar{
     this._addEventListener()
   }
 
+  get state(){
+    return this._state
+  }
+
   _update(){
     this._clear()
     
