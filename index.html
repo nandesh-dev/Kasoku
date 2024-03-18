@@ -16,6 +16,13 @@
       <section id="preview-container" class="flex h-full rounded bg-white">
       </section>
       <section id="editor-container" class="h-full rounded bg-gray-300">
+        <div id="popup-container" class="hidden absolute w-48 h-64 rounded p-2 bg-gray-400">
+          <template id="popup-tree-element-template">
+            <div id="popup-tree-element-container" class="border-l-2 p-1 pl-2">
+              <p id="popup-tree-element-text" class="text-white"></p>
+            </div>
+          </template>
+        </div>
         <canvas id="editor-canvas" class="h-full w-full"></canvas>
       </section>
     </section>

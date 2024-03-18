@@ -1,6 +1,6 @@
 import { ShotcutBar } from './shotcutBar'
 import { Preview } from './preview'
-
+import { Popup } from './popup'
 
 const shotcutBar = new ShotcutBar("home")
 
@@ -76,7 +76,7 @@ function renderCanvas(){
     ctx.strokeRect(x - 4, y - 4, width, height)
     
     if ( block.selected ) {
-      ctx.fillStyle = "rgba(255, 255, 255, 0.2)"
+      ctx.fillStyle = "rgba(255, 255, 255, 0.5)"
       ctx.fillRect(x - 4, y - 4, width, height)
     } else if ( block.near ) {
       ctx.fillStyle = "rgba(255, 255, 255, 0.1)"
@@ -87,7 +87,15 @@ function renderCanvas(){
   requestAnimationFrame(renderCanvas)
 }
 
+const previousMousePosition = {
+  x: window.innerWidth / 2,
+  y: window.innerHeight / 2 
+}
+
 canvas.addEventListener("mousemove", ({clientX, clientY})=>{
+  previousMousePosition.x = clientX
+  previousMousePosition.y = clientY
+
   const mouseX = clientX - containerX
   const mouseY = clientY - containerY
 
@@ -109,10 +117,13 @@ canvas.addEventListener("mousemove", ({clientX, clientY})=>{
 
 })
 
-canvas.addEventListener("click", ({clientX, clientY})=>{
+const popup = new Popup(preview)
+
+canvas.addEventListener("click", ()=>{
   shotcutBar.setState("selected")
 
   preview.transverse((block, parent)=>{
+    block.scrolled = false
     if ( block.selected ) {
       block.selected = false
       block.near = true
@@ -125,6 +136,7 @@ canvas.addEventListener("click", ({clientX, clientY})=>{
 canvas.addEventListener("wheel", ({ deltaY })=>{
   const up = deltaY > 0
   
+  
   if ( up ) {
     preview.transverse((block, parent)=>{
       if ( !parent ) return
@@ -132,22 +144,27 @@ canvas.addEventListener("wheel", ({ deltaY })=>{
         block.selected = false
         block.scrolled = true
         parent.selected = true
+        
+        popup.showTree(previousMousePosition, preview.tree)
+        
+        return true
       }
     })
 
-    preview.render()
   } else {
     preview.transverse((block, parent)=>{
       if ( !parent ) return
       if ( !parent.selected || !block.scrolled )  return
+      
       parent.selected = false
       parent.scrolled = false
       block.selected = true
-
+      
+      popup.showTree(previousMousePosition, preview.tree)
       return true
     })
   }
-  console.log(preview._tree, null, 3)
+  preview.render()
 })
 
 renderCanvas()
