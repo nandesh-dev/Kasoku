@@ -45,6 +45,10 @@ export class Popup{
           endBox.style.backgroundColor = Constants.Elements[node.type].color
           line.style.backgroundColor = Constants.Elements[node.type].color
 
+          if ( node.selected ) {
+            textOpen.style.color="white"
+            textClose.style.color="white"
+          }
 
           if ( node.children.length == 0 ) {
             const textCloseOuter = element.querySelector("#popup-tree-element-text-close-outer")
