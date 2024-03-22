@@ -5,19 +5,24 @@ export class Preview{
     this._tree = {
       element: this._container,
       scrolled: false,
+      type: "div",
       children: [
         {
           scrolled: false,
-          children: []
+          children: [],
+          type: "section"
         },
         {
           scrolled: false,
+          type: "section",
           children: [
             {
               scrolled: false,
+              type: "div",
               children: []
             },
             {
+              type: "div",
               scrolled: false,
               children: []
             }
@@ -38,7 +43,7 @@ export class Preview{
       if(!block.element){
         const element = document.createElement(block.type || "div")
         block.element = element
-        element.className = "flex flex-1 min-w-10 min-h-10 p-10"
+        element.className = "flex flex-1 min-w-10 min-h-10 p-10 bg-[rgba(0,0,0,0.1)]"
         parent.element.appendChild(element)    
       }
     }) 
@@ -49,6 +54,6 @@ export class Preview{
 
     block.children.forEach((child)=>{
       this.transverse(func, child, block, level + 1)
-    })      
+    })   
   }
 }

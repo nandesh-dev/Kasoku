@@ -39,12 +39,6 @@ export class ShotcutBar{
     })
 
     if ( this._state == this._homeState ) return
-
-    const button = Templates.ShotcutButton()
-    button.querySelector(".shotcut-text").innerText = "Esc"
-      
-    this._container.appendChild(button)
-
   }
 
   _clear(){
@@ -66,11 +60,6 @@ export class ShotcutBar{
 
   _addEventListener(){
     window.addEventListener("keydown", ({key})=>{
-      if ( key == "Escape" )  {
-        this.setState(this._homeState)
-        return
-      }
-
       this._onKeyPress(key)
     })
   }

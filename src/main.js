@@ -1,6 +1,7 @@
 import { ShotcutBar } from './shotcutBar'
 import { Preview } from './preview'
 import { Popup } from './popup'
+import * as Constants from './constants'
 
 const shotcutBar = new ShotcutBar("home")
 
@@ -11,41 +12,15 @@ shotcutBar.attachKeybind("selected", "New Element", " ", ()=>{
   shotcutBar.setSelectedKey("d")
 })
 
-const elementTypes = [
-  {
-    name: "Div",
-    keybind: "d",
-    type: "div"
-  },
-  {
-    name: "Para",
-    keybind: "r",
-    type: "p"
-  },
-  {
-    name: "Button",
-    keybind: "b",
-    type: "button"
-  },
-  {
-    name: "Anchor",
-    keybind: "a",
-    type: "a"
-  },
-  {
-    name: "Section",
-    keybind: "s",
-    type: "section"
-  },
-  {
-    name: "Nav",
-    keybind: "n",
-    type: "nav"
-  },
-]
+shotcutBar.attachKeybind("selected", "Unselect", "Escape", ()=>{
+  preview.transverse((block)=>{
+    block.selected = false
+  })
+  popup.hide()
+})
 
-elementTypes.forEach(({ name, keybind, type })=>{
-  shotcutBar.attachKeybind("new", name, keybind, ()=>{
+Object.keys(Constants.Elements).forEach((type)=>{
+  shotcutBar.attachKeybind("new", Constants.Elements[type].name, Constants.Elements[type].keybind, ()=>{
     preview.transverse((block, parent)=>{
       if ( !block.selected ) return
       block.children.push({ type , children: []})
@@ -121,6 +96,7 @@ const popup = new Popup(preview)
 
 canvas.addEventListener("click", ()=>{
   shotcutBar.setState("selected")
+  popup.hide()
 
   preview.transverse((block, parent)=>{
     block.scrolled = false
@@ -145,7 +121,7 @@ canvas.addEventListener("wheel", ({ deltaY })=>{
         block.scrolled = true
         parent.selected = true
         
-        popup.showTree(previousMousePosition, preview.tree)
+        popup.display("tree", previousMousePosition, preview.tree)
         
         return true
       }
@@ -160,7 +136,7 @@ canvas.addEventListener("wheel", ({ deltaY })=>{
       parent.scrolled = false
       block.selected = true
       
-      popup.showTree(previousMousePosition, preview.tree)
+      popup.display("tree", previousMousePosition, preview.tree)
       return true
     })
   }

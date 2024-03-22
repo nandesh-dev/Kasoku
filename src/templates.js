@@ -7,3 +7,8 @@ export function SelectedShotcutButton(){
 export function PopupTreeElement(){
   return document.getElementById("popup-tree-element-template").content.cloneNode(true)
 }
+export function PopupTreeTabSpace(){
+  return document.getElementById("popup-tree-tab-space-template").content.cloneNode(true)
+}
+
+

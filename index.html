@@ -18,8 +18,19 @@
       <section id="editor-container" class="h-full rounded bg-gray-300">
         <div id="popup-container" class="hidden absolute w-48 h-64 rounded p-2 bg-gray-400">
           <template id="popup-tree-element-template">
-            <div id="popup-tree-element-container" class="border-l-2 p-1 pl-2">
-              <p id="popup-tree-element-text" class="text-white"></p>
+            <div id="popup-tree-element-outer" class="">
+              <div class="grid grid-cols-[1rem_1fr] items-center gap-2">
+                <div id="popup-tree-element-start-box" class="w-4 h-4 rounded-[2px] bg-white"></div>
+                <p id="popup-tree-element-text-open" class="text-white"></p>
+              </div>
+              <div class="grid grid-cols-[1rem_1fr]">
+                <div id="popup-tree-element-line"  class="w-[2px] h-full bg-white justify-self-center rounded"></div>
+                <div id="popup-tree-element-inner"></div>
+              </div>
+              <div id="popup-tree-element-text-close-outer" class="grid grid-cols-[1rem_1fr] items-center gap-2">
+                <div id="popup-tree-element-end-box"  class="w-4 h-4 rounded-[2px] bg-white"></div>
+                <p id="popup-tree-element-text-close" class="text-white">end</p>
+              </div>
             </div>
           </template>
         </div>
