@@ -8,6 +8,7 @@ export class Popup{
     this._container = document.getElementById("popup-container")
     this._preview = preview
     this._timeout = null
+    this._addEventListener()
   }
 
   display(type, position){
@@ -75,9 +76,20 @@ export class Popup{
   }
 
   hide(){
-    return
     this._container.style.display = "none"
     this._timeout = null
+  }
+
+  _addEventListener(){
+    this._container.addEventListener("mouseleave", ()=>{
+      this.hide()
+      clearInterval(this._timeout)
+      this._timeout = null 
+    })
+    this._container.addEventListener("mouseenter", ()=>{
+      clearInterval(this._timeout)
+      this._timeout = null 
+    })
   }
 
   _updateTime(){
