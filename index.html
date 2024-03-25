@@ -25,23 +25,107 @@
       <section id="preview-container" class="flex h-full rounded bg-white">
       </section>
       <section id="editor-container" class="h-full rounded bg-gray-300">
-        <div id="popup-container" class="hidden absolute w-48 h-64 rounded p-2 bg-gray-400">
-          <template id="popup-tree-element-template">
-            <div id="popup-tree-element-outer" class="">
-              <div class="grid grid-cols-[1rem_1fr] items-center gap-2">
-                <div id="popup-tree-element-start-box" class="w-4 h-4 rounded-[2px] bg-white"></div>
-                <p id="popup-tree-element-text-open" class="text-gray-800"></p>
+        <div id="popup-container" class="hidden absolute rounded p-2 bg-gray-400">
+          <!-- Tree -->
+          <div id="popup-tree-container">
+            <template id="popup-tree-element-template">
+              <div id="popup-tree-element-outer" class="">
+                <div class="grid grid-cols-[1rem_1fr] items-center gap-2">
+                  <div id="popup-tree-element-start-box" class="w-4 h-4 rounded-[2px] bg-white"></div>
+                  <p id="popup-tree-element-text-open" class="text-gray-800"></p>
+                </div>
+                <div class="grid grid-cols-[1rem_1fr]">
+                  <div id="popup-tree-element-line"  class="w-[2px] h-full bg-white justify-self-center rounded"></div>
+                  <div id="popup-tree-element-inner"></div>
+                </div>
+                <div id="popup-tree-element-text-close-outer" class="grid grid-cols-[1rem_1fr] items-center gap-2">
+                  <div id="popup-tree-element-end-box"  class="w-4 h-4 rounded-[2px] bg-white"></div>
+                  <p id="popup-tree-element-text-close" class="text-gray-800"></p>
+                </div>
               </div>
-              <div class="grid grid-cols-[1rem_1fr]">
-                <div id="popup-tree-element-line"  class="w-[2px] h-full bg-white justify-self-center rounded"></div>
-                <div id="popup-tree-element-inner"></div>
-              </div>
-              <div id="popup-tree-element-text-close-outer" class="grid grid-cols-[1rem_1fr] items-center gap-2">
-                <div id="popup-tree-element-end-box"  class="w-4 h-4 rounded-[2px] bg-white"></div>
-                <p id="popup-tree-element-text-close" class="text-gray-800"></p>
-              </div>
-            </div>
-          </template>
+            </template>
+          </div>
+          <!-- Layout -->
+          <div id="popup-layout-container" class="grid grid-cols-4 grid-rows-8 gap-2">
+            <button id="popup-layout-block-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/block.svg"/>
+            </button>
+            <button id="popup-layout-flex-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/flex.svg"/>
+            </button>
+            <button id="popup-layout-grid-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/grid.svg"/>
+            </button>
+            <button id="popup-layout-hidden-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/hidden.svg"/>
+            </button>
+            <button id="popup-layout-cols-button" class="h-10 col-span-4 flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/plus.svg"/>
+            </button>
+            <button id="popup-layout-rows-button" class="w-10 row-span-3 flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/plus.svg"/>
+            </button>
+            <button id="popup-layout-items-tl-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/items.svg"/>
+            </button>
+            <button id="popup-layout-items-t-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/items.svg"/>
+            </button>
+            <button id="popup-layout-items-tr-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/items.svg"/>
+            </button>
+            <button id="popup-layout-items-l-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/items.svg"/>
+            </button>
+            <button id="popup-layout-items-c-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/items.svg"/>
+            </button>
+            <button id="popup-layout-items-r-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/items.svg"/>
+            </button>
+            <button id="popup-layout-items-bl-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/items.svg"/>
+            </button>
+            <button id="popup-layout-items-b-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/items.svg"/>
+            </button>
+            <button id="popup-layout-items-br-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/items.svg"/>
+            </button>
+            <button id="popup-layout-tl-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/content.svg"/>
+            </button>
+            <button id="popup-layout-t-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/content.svg"/>
+            </button>
+            <button id="popup-layout-tr-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/content.svg"/>
+            </button>
+            <button id="popup-layout-direction-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/direction.svg"/>
+            </button>
+            <button id="popup-layout-l-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/content.svg"/>
+            </button>
+            <button id="popup-layout-c-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/content.svg"/>
+            </button>
+            <button id="popup-layout-r-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/content.svg"/>
+            </button>
+            <button id="popup-layout-wrap-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/wrap.svg"/>
+            </button>
+            <button id="popup-layout-bl-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/content.svg"/>
+            </button>
+            <button id="popup-layout-b-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/content.svg"/>
+            </button>
+            <button id="popup-layout-br-button" class="w-10 aspect-square flex items-center justify-center bg-gray-500">
+              <img src="/public/icons/layout/content.svg"/>
+            </button>
+          </div>
         </div>
         <canvas id="editor-canvas" class="h-full w-full"></canvas>
       </section>

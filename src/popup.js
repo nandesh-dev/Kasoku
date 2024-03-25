@@ -1,18 +1,32 @@
 import * as Templates from './templates'
 import tailwindConfig from '../tailwind.config'
 import * as Constants from './constants'
+import { clear } from './utils'
 const { theme: { extend: { colors } } } = tailwindConfig
 
 export class Popup{
   constructor(preview){
     this._container = document.getElementById("popup-container")
+    this._innerContainer = {
+      tree: document.querySelector("#popup-tree-container"),
+      layout: document.querySelector("#popup-layout-container"),
+    }
     this._preview = preview
     this._timeout = null
     this._addEventListener()
   }
 
-  display(type, position){
-    this._clear()
+  display(type, position){    
+    this._hideInnerContainersExcept(type)
+
+    switch(type){
+      case "tree":
+        this._displayTree()
+      break;
+      case "layout":
+        const container = document.querySelector("#popup-layout-container")
+        console.log(container)
+    }
     
     if ( !this._timeout ) { 
       this._container.style.display = "block"
@@ -29,57 +43,61 @@ export class Popup{
       }
     }
 
-    switch(type){
-      case "tree":
-        const renderNode = (node) =>{
-          const element = Templates.PopupTreeElement()
-          const innerContainer = element.querySelector("#popup-tree-element-inner")
-          const textOpen = element.querySelector("#popup-tree-element-text-open")
-          const textClose = element.querySelector("#popup-tree-element-text-close")
-         
-          const startBox = element.querySelector("#popup-tree-element-start-box")
-          const endBox = element.querySelector("#popup-tree-element-end-box")
-          const line = element.querySelector("#popup-tree-element-line")
 
-          startBox.style.backgroundColor = Constants.Elements[node.type].color
-          endBox.style.backgroundColor = Constants.Elements[node.type].color
-          line.style.backgroundColor = Constants.Elements[node.type].color
-
-          if ( node.selected ) {
-            textOpen.style.color="white"
-            textClose.style.color="white"
-          }
-
-          if ( node.children.length == 0 ) {
-            const textCloseOuter = element.querySelector("#popup-tree-element-text-close-outer")
-            textCloseOuter.style.display = "none"
-            textOpen.innerText = `<${node.type}/>`
-          } else {
-            textOpen.innerText = `<${node.type}>`
-            textClose.innerText = `</${node.type}>`
-          }
-
-          node.children.forEach((childrenNode)=>{
-            innerContainer.appendChild(renderNode(childrenNode))
-          })
-
-          return element
-        }
-
-        this._container.appendChild(renderNode(this._preview.tree))
-      break
-    }
-    
     this._updateTime()
   }
 
-  _clear(){
-    while (this._container.lastChild && this._container.lastChild.nodeName !== "TEMPLATE") {
-      this._container.removeChild(this._container.lastChild);
-    } 
+  _displayTree(){
+    const container = this._innerContainer.tree
+    clear(container)
+
+    const renderNode = (node) =>{
+      const element = Templates.PopupTreeElement()
+      const innerContainer = element.querySelector("#popup-tree-element-inner")
+      const textOpen = element.querySelector("#popup-tree-element-text-open")
+      const textClose = element.querySelector("#popup-tree-element-text-close")
+     
+      const startBox = element.querySelector("#popup-tree-element-start-box")
+      const endBox = element.querySelector("#popup-tree-element-end-box")
+      const line = element.querySelector("#popup-tree-element-line")
+
+      startBox.style.backgroundColor = Constants.Elements[node.type].color
+      endBox.style.backgroundColor = Constants.Elements[node.type].color
+      line.style.backgroundColor = Constants.Elements[node.type].color
+
+      if ( node.selected ) {
+        textOpen.style.color="white"
+        textClose.style.color="white"
+      }
+
+      if ( node.children.length == 0 ) {
+        const textCloseOuter = element.querySelector("#popup-tree-element-text-close-outer")
+        textCloseOuter.style.display = "none"
+        textOpen.innerText = `<${node.type}/>`
+      } else {
+        textOpen.innerText = `<${node.type}>`
+        textClose.innerText = `</${node.type}>`
+      }
+
+      node.children.forEach((childrenNode)=>{
+        innerContainer.appendChild(renderNode(childrenNode))
+      })
+
+      return element
+    }
+
+    container.appendChild(renderNode(this._preview.tree))
+  }
+
+  _hideInnerContainersExcept(type){
+    Object.keys(this._innerContainer).forEach((key)=>{
+      if( key == type ) return  this._innerContainer[key].style.display = ""
+      this._innerContainer[key].style.display = "none"
+    })
   }
 
   hide(){
+    return
     this._container.style.display = "none"
     this._timeout = null
   }

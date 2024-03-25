@@ -12,10 +12,15 @@ shotcutBar.attachKeybind("selected", "New Element", " ", ()=>{
   shotcutBar.setSelectedKey("d")
 })
 
+shotcutBar.attachKeybind("selected", "Layout", "q", ()=>{
+  popup.display("layout", previousMousePosition)
+})
+
 shotcutBar.attachKeybind("selected", "Unselect", "Escape", ()=>{
   preview.transverse((block)=>{
     block.selected = false
   })
+  shotcutBar.setState("home")
   popup.hide()
 })
 
