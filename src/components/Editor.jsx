@@ -13,6 +13,7 @@ export function Editor(){
   const [ mousePosition, setMousePosition ] = useState()
 
   const menuRef = useRef()
+  const [ menuTimeout, setMenuTimeout ] = useState()
   const [ menuState, setMenuState ] = useState(Menu.hidden)
 
   useLayoutEffect(()=>{
@@ -88,6 +89,7 @@ export function Editor(){
   })
 
   useEffect(()=>{
+    if (menuState == Menu.hidden) return
     if (!menuRef.current || !mousePosition) return
     const menu = menuRef.current
     
@@ -106,12 +108,12 @@ export function Editor(){
       menu.style.top = mousePosition.y + "px"
     }
 
-    const timeout = setTimeout(()=>{
+    setMenuTimeout(setTimeout(()=>{
       setMenuState(Menu.hidden)
-    }, 3000)
+    }, 3000))
 
     return () =>{
-      clearInterval(timeout)
+      clearTimeout(menuTimeout)
     }
   }, [menuState])
 
@@ -157,6 +159,16 @@ export function Editor(){
     
     setMenuState(Menu.tree)
   }
+
+  const onMouseEnterMenu = () =>{
+    if (!menuTimeout) return
+    clearTimeout(menuTimeout)
+    setMenuTimeout(null)
+  }
+
+  const onMouseLeaveMenu = () =>{
+    setMenuState(Menu.hidden)
+  }
   
   return (
     <section className="grid grid-cols-2 gap-1">
@@ -165,7 +177,11 @@ export function Editor(){
       </section>
       <section className="relative bg-white dark:bg-gray-200 rounded overflow-hidden" ref={outerRef}>
         <canvas ref={canvasRef} onClick={onClick} onMouseMove={onMouseMove}/>
-        <div className="absolute top-0 bg-white-900 dark:bg-gray-500 p-4 rounded" style={{ display: menuState === Menu.hidden ? "none": "block" }} ref={menuRef}>
+        <div className="absolute top-0 bg-white-900 dark:bg-gray-500 p-4 rounded" 
+          style={{ display: menuState === Menu.hidden ? "none": "block" }} 
+          ref={menuRef}
+          onMouseLeave={onMouseLeaveMenu}
+          onMouseEnter={onMouseEnterMenu}>
           {
             (()=>{
               switch(menuState){
