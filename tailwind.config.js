@@ -7,6 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        "black": "#000000",
         "gray-100": '#13151B',
         "gray-200": '#1A1B25',
         "gray-300": '#21222D',
@@ -15,10 +16,11 @@ export default {
         "gray-700": '#585A7C',
         "gray-800": '#A9ABC2',
         "white": '#FFFFFF',
-        "white-800": '#EDF2F5',
-        "white-700": '#CED6DB',
-        "white-600": '#B3BEC7',
-        "white-500": '#B3BEC7',
+        "white-900": '#F4F7FA',
+        "white-800": '#F2F6F9',
+        "white-700": '#E1E9EE',
+        "white-600": '#D1DBE2',
+        "white-500": '#C1CAD0',
         "sky":       '#42B7EA',
         "blue":       '#4249EA',
         "purple":     '#A042EA',

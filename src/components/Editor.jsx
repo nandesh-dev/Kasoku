@@ -1,9 +1,12 @@
-import { useRef, useLayoutEffect, useEffect } from 'react'
-import { ElementTypes, Colors } from '../constants'
+import { useRef, useLayoutEffect, useEffect, useState } from 'react'
+import { ElementTypes, Colors, Menu, DarkMode } from '../constants'
+
+import { Tree } from './Menu/Tree'
 
 export function Editor({ tree }){
   const canvasRef = useRef()
   const outerRef = useRef()
+  const [ menuState, setMenuState ] = useState(null)
 
   useLayoutEffect(()=>{
     if (!outerRef.current || !canvasRef.current)  return
@@ -58,14 +61,14 @@ export function Editor({ tree }){
 
       const ctx = canvasRef.current.getContext('2d')
       ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
-
+  
       const drawOutline = (element) =>{
         const { x, y, width, height } = element.ref.current.getBoundingClientRect()
         
         ctx.strokeStyle = Colors.sky
         ctx.lineWidth = 2
 
-        ctx.fillStyle = Colors["gray-500"]
+        ctx.fillStyle = DarkMode ? Colors["gray-400"] : Colors["white-700"]
         
         if ( element.editorData.hovering ) ctx.fillRect(x-4, y-4, width, height)
         ctx.strokeRect(x - 4, y - 4, width, height)
@@ -84,11 +87,11 @@ export function Editor({ tree }){
         if ( element.editorData.selected ) {
           const { x, y, width, height } = element.ref.current.getBoundingClientRect()
     
-          ctx.strokeStyle = Colors.white
+          ctx.strokeStyle = DarkMode ? Colors.white : Colors["gray-700"]
           ctx.lineWidth = 2
           ctx.strokeRect(x - 4, y - 4, width, height)
 
-          ctx.fillStyle = Colors.white
+          ctx.fillStyle = DarkMode ? Colors.white : Colors["gray-700"]
           const a = 8
           ctx.fillRect(x - 4 - (a / 2), y - 4 - (a/2), a, a)
           ctx.fillRect(x - 4 + width - (a / 2), y - 4 - (a/2), a, a)
@@ -123,6 +126,7 @@ export function Editor({ tree }){
       }
      
       checkHover(tree)
+      setMenuState(Menu.tree)
     }
 
     window.addEventListener("click", eventListener)
@@ -135,8 +139,20 @@ export function Editor({ tree }){
       <section className="bg-white rounded relative">
         <Element element={tree}/>
       </section>
-      <section className="bg-white dark:bg-gray-200 rounded overflow-hidden" ref={outerRef}>
+      <section className="relative bg-white dark:bg-gray-200 rounded overflow-hidden" ref={outerRef}>
         <canvas ref={canvasRef}/>
+        <div className="absolute top-0 bg-white-900 dark:bg-gray-500 p-4 rounded">
+          {
+            (()=>{
+              switch(menuState){
+                case Menu.tree:
+                  return <Tree tree={tree} />
+                case Menu.layout:
+                  return "Layout"
+              }
+            })()
+          }
+        </div>
       </section>
     </section>
   )
@@ -155,6 +171,8 @@ function Element({element}){
       return <div className="w-28 h-28 bg-orange animate-bounce" ref={ref}>{children}</div>
     case ElementTypes.section:
       return <section className="flex gap-2 w-36 h-72 bg-sky" ref={ref}>{children}</section>
+    case ElementTypes.p:
+      return <p ref={ref}>{children}</p>
   }
 }
 

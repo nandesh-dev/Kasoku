@@ -6,24 +6,32 @@ export const ElementTypes = {
   root: "root",
   section: "section",
   div: "div",
-  section: "section"
+  p: "p"
 }
 
 export const ElementProperties = {
   root: {
     name: "Root",
-    color: Colors.blue,
+    color: Colors.sky,
   },
   div: {
     name: "Div",
-    color: Colors.blue,
+    color: Colors.yellow,
   },
   section: {
     name: "Section",
-    color: Colors.green,
+    color: Colors.pink,
   },
   p: {
     name: "Para",
-    color: Colors.pink,
+    color: Colors.purple,
   },
 }
+
+export const Menu = {
+  tree: "tree",
+  layout: "layout",
+  position: "position"
+}
+
+export const DarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches

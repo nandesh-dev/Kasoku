@@ -28,7 +28,14 @@ export function App(){
             type: ElementTypes.div,
             id: 3,
             editorData: {},
-            childrens: []
+            childrens: [
+              {
+                type: ElementTypes.p,
+                id: 4,
+                editorData: {},
+                childrens: []
+              },    
+            ]
           },
         ]
       } 
@@ -48,7 +55,7 @@ export function App(){
   }, [])
 
   return (
-    <section className="w-screen h-screen grid grid-rows-[1fr_auto] p-1 gap-1 bg-white-800 dark:bg-gray-100">
+    <section className="w-screen h-screen grid grid-rows-[1fr_auto] p-1 gap-1 bg-white-700 dark:bg-gray-100">
       <Editor tree={tree} setTree={setTree}/>
       <ShotcutBar shotcuts={shotcuts}/>
     </section>
