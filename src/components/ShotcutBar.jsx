@@ -2,7 +2,7 @@ export function ShotcutBar({ shotcuts }){
   if ( typeof(shotcuts) == 'undefined' || shotcuts.length == 0) {
     return (
       <div className="bg-white dark:bg-gray-300 border-l-4 border-orange rounded py-1 px-4">
-        <p className="text-gray-500 dark:text-gray-800 text-nowrap">Kasoku</p>
+        <p className="text-gray-500 dark:text-gray-800 text-nowrap">Kasoku - The visual HTML CSS editor.</p>
       </div>
     )
   }

@@ -29,6 +29,7 @@ export const ElementProperties = {
 }
 
 export const Menu = {
+  hidden: "hidden",
   tree: "tree",
   layout: "layout",
   position: "position"

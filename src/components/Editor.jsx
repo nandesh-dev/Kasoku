@@ -1,12 +1,19 @@
-import { useRef, useLayoutEffect, useEffect, useState } from 'react'
+import { useRef, useLayoutEffect, useEffect, useState, useContext } from 'react'
+
 import { ElementTypes, Colors, Menu, DarkMode } from '../constants'
+import { TreeStateContext } from '../context'
 
 import { Tree } from './Menu/Tree'
 
-export function Editor({ tree }){
+export function Editor(){
+  const { tree, setTree } = useContext(TreeStateContext)
   const canvasRef = useRef()
   const outerRef = useRef()
-  const [ menuState, setMenuState ] = useState(null)
+
+  const [ mousePosition, setMousePosition ] = useState()
+
+  const menuRef = useRef()
+  const [ menuState, setMenuState ] = useState(Menu.hidden)
 
   useLayoutEffect(()=>{
     if (!outerRef.current || !canvasRef.current)  return
@@ -15,41 +22,7 @@ export function Editor({ tree }){
 
     canvasRef.current.height = parseInt(heightString, 10)
     canvasRef.current.width = parseInt(widthString, 10)
-    console.log(tree)
   }, [outerRef])
-
-  useEffect(()=>{
-    const eventListener = ({ clientX: mouseX, clientY: mouseY }) =>{
-      const { x: canvasX, y: canvasY } = canvasRef.current.getBoundingClientRect()
-      const checkHover = (element, parent) =>{
-        const { x, y, width, height } = element.ref.current.getBoundingClientRect()
-        
-        if ( 
-          mouseX - canvasX > x &&
-          mouseX - canvasX < x + width &&
-          mouseY - canvasY > y &&
-          mouseY - canvasY < y + height
-        ) {
-          if (parent) parent.editorData.hovering = false
-          element.editorData.hovering = true
-        } else {
-          element.editorData.hovering = false
-        }
-
-        element.childrens.forEach((children)=>{
-          checkHover(children, element)
-        })
-      }
-     
-      checkHover(tree)
-    }
-
-    window.addEventListener("mousemove", eventListener)
-
-    return ()=>{
-      removeEventListener("mousemove", eventListener)
-    }
-  })
 
   useEffect(()=>{
     let running = true
@@ -115,33 +88,84 @@ export function Editor({ tree }){
   })
 
   useEffect(()=>{
-    const eventListener = () =>{
-      const checkHover = (element, parent) =>{
-        if ( element.editorData.hovering ) element.editorData.selected = true
-        else element.editorData.selected = false
-      
-        element.childrens.forEach((children)=>{
-          checkHover(children)
-        })
-      }
-     
-      checkHover(tree)
-      setMenuState(Menu.tree)
+    if (!menuRef.current || !mousePosition) return
+    const menu = menuRef.current
+    
+    const { width: canvasWidth, height: canvasHeight } = canvasRef.current.getBoundingClientRect()
+    const { width: menuWidth, height: menuHeight } = menu.getBoundingClientRect()
+    
+    if (mousePosition.x > canvasWidth - menuWidth) {
+      menu.style.left = mousePosition.x - menuWidth + "px"
+    } else {
+      menu.style.left = mousePosition.x + "px"
     }
 
-    window.addEventListener("click", eventListener)
+    if (mousePosition.y > canvasHeight - menuHeight) {
+      menu.style.top = mousePosition.y - menuHeight + "px" 
+    } else {
+      menu.style.top = mousePosition.y + "px"
+    }
 
-    return ()=>removeEventListener("click", eventListener)
-  })
+    const timeout = setTimeout(()=>{
+      setMenuState(Menu.hidden)
+    }, 3000)
 
+    return () =>{
+      clearInterval(timeout)
+    }
+  }, [menuState])
+
+  const onMouseMove = ({ clientX: mouseX, clientY: mouseY }) =>{
+    const { x: canvasX, y: canvasY } = canvasRef.current.getBoundingClientRect()
+    setMousePosition({ x: mouseX - canvasX, y: mouseY - canvasY })
+    const checkHover = (element, parent) =>{
+      const { x, y, width, height } = element.ref.current.getBoundingClientRect()
+      
+      if ( 
+        mouseX - canvasX > x &&
+        mouseX - canvasX < x + width &&
+        mouseY - canvasY > y &&
+        mouseY - canvasY < y + height
+      ) {
+        if (parent) parent.editorData.hovering = false
+        element.editorData.hovering = true
+      } else {
+        element.editorData.hovering = false
+      }
+
+      element.childrens.forEach((children)=>{
+        checkHover(children, element)
+      })
+    }
+   
+    checkHover(tree)
+  }
+  
+
+  const onClick = () =>{
+    const checkHover = (element) =>{
+      if ( element.editorData.hovering ) element.editorData.selected = true
+      else element.editorData.selected = false
+    
+      element.childrens.forEach((children)=>{
+        checkHover(children)
+      })
+    }
+   
+    checkHover(tree)
+    setTree({...tree})
+    
+    setMenuState(Menu.tree)
+  }
+  
   return (
     <section className="grid grid-cols-2 gap-1">
-      <section className="bg-white rounded relative">
+      <section className="bg-white rounded">
         <Element element={tree}/>
       </section>
       <section className="relative bg-white dark:bg-gray-200 rounded overflow-hidden" ref={outerRef}>
-        <canvas ref={canvasRef}/>
-        <div className="absolute top-0 bg-white-900 dark:bg-gray-500 p-4 rounded">
+        <canvas ref={canvasRef} onClick={onClick} onMouseMove={onMouseMove}/>
+        <div className="absolute top-0 bg-white-900 dark:bg-gray-500 p-4 rounded" style={{ display: menuState === Menu.hidden ? "none": "block" }} ref={menuRef}>
           {
             (()=>{
               switch(menuState){
